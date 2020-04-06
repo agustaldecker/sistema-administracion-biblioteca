@@ -1,0 +1,52 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns = "http://www.springframework.org/schema/beans"
+       xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context = "http://www.springframework.org/schema/context"
+       xsi:schemaLocation = "http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName"  value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/librarians?serverTimezone=UTC"/>
+        <property name="username" value="root"/>
+        <property name="password" value="Prostorock77"/>
+    </bean>
+
+    <bean id="mySessionFactory"  class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+
+        <property name = "dataSource" ref = "dataSource"/>
+
+        <property name="mappingResources">
+            <list>
+                <value>Librarian.hbm.xml</value>
+                <value>Book.hbm.xml</value>
+                <value>IssuedBook.hbm.xml</value>
+            </list>
+        </property>
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.current_session_context_class">thread</prop>
+                <prop key="hibernate.show_sql">false</prop>
+
+            </props>
+        </property>
+    </bean>
+
+    <bean id="manageLibrarian" class="ManagementLibrarian">
+        <property name="sessionFactory" ref="mySessionFactory" />
+    </bean>
+
+    <bean id = "manageBook" class = "ManagementBook">
+        <property name = "sessionFactory" ref = "mySessionFactory"/>
+    </bean>
+
+    <bean id = "manageIssuedBook" class = "ManagementIssuedBook">
+        <property name = "sessionFactory" ref = "mySessionFactory"/>
+    </bean>
+
+</beans>
